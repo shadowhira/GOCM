@@ -11,6 +11,7 @@ import { loadMessages } from "@/i18n/utils";
 import TanstackProvider from "@/components/providers/TanstackProvider";
 import { Mulish } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { ColdStartNotice } from "@/components/providers/ColdStartNotice";
 
 const mulish = Mulish({
   subsets: ["latin"],
@@ -73,6 +74,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <I18nProvider messages={messages} locale={locale}>
             <LocaleStoreSyncer />
             <ThemeProvider />
+            <ColdStartNotice />
             <Toaster position="top-right" richColors />
             {children}
           </I18nProvider>
