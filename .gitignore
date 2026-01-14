@@ -1,0 +1,100 @@
+# Visual Studio
+/.vs
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET Build outputs
+/backend/obj
+/backend/bin
+/backend/out
+/obj
+/bin
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Python (quiz-service)
+# Ignore virtualenvs, caches, build artifacts, logs and test outputs
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+quiz-service/env/
+quiz-service/venv/
+quiz-service/.venv/
+.mypy_cache/
+.pytest_cache/
+.venv/
+quiz-service/.env
+quiz-service/.env.local
+quiz-service/.env.*.local
+
+# Logs and outputs
+quiz-service/logs/
+*.log
+test_output/
+
+# Sample documents and temp files
+quiz-service/sample_documents/
+quiz-service/public/
+quiz-service/__pycache__/
+
+# Misc
+quiz-service/.DS_Store
+quiz-service/*.dist-info/
+
+# Node.js / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.env*.local
+frontend/.turbo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/frontend/node_modules
+/frontend/.next
+/frontend/package-lock.json
+/frontend/.env.local
+
+#env
+/backend/appsettings.Development.json
+/backend/appsettings.json

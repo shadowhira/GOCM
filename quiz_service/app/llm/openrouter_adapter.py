@@ -1,0 +1,251 @@
+import json
+import asyncio
+import re
+from typing import List, Dict, Any, Optional
+from loguru import logger
+
+try:
+    from openai import AsyncOpenAI
+except ImportError:
+    AsyncOpenAI = None
+
+from app.llm.base_adapter import (
+    LLMAdapter,
+    MCQResult,
+    BatchMCQResult,
+    DistractorResult,
+    ShortAnswerResult,
+    TrueFalseResult,
+)
+from app.core.config import get_settings
+
+settings = get_settings()
+
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+OPENROUTER_MODEL=settings.OPENROUTER_MODEL or "google/gemini-2.0-flash-001"
+
+
+class OpenRouterAdapter(LLMAdapter):
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model_name: str = OPENROUTER_MODEL,
+        max_output_tokens: int = 8192,
+        **kwargs
+    ):
+        super().__init__(model_name=model_name, **kwargs)
+
+        if AsyncOpenAI is None:
+            raise ImportError("openai package is required for OpenRouterAdapter")
+
+        api_key = api_key or settings.OPENROUTER_API_KEY
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY is required")
+
+        self.max_output_tokens = max_output_tokens
+        self.client = AsyncOpenAI(
+            api_key=api_key,
+            base_url=OPENROUTER_BASE_URL,
+        )
+        logger.info(f"Initialized OpenRouterAdapter with model {model_name}, max_output_tokens={max_output_tokens}")
+
+    def _extract_json_from_response(self, text: str) -> str:
+        text = text.strip()
+        
+        # Try to find JSON in markdown code block
+        code_block_match = re.search(r'```(?:json)?\s*([\s\S]*?)```', text)
+        if code_block_match:
+            return code_block_match.group(1).strip()
+        
+        # Try to find raw JSON object or array
+        json_match = re.search(r'(\{[\s\S]*\}|\[[\s\S]*\])', text)
+        if json_match:
+            return json_match.group(1).strip()
+        
+        return text
+
+    async def _call_with_retry(self, prompt: str, max_tokens: Optional[int] = None) -> str:
+        """Call OpenRouter API with retry logic and rate limit handling."""
+        import random
+        
+        effective_max_tokens = max_tokens or self.max_output_tokens
+        
+        for attempt in range(self.max_retries):
+            try:
+                response = await self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {"role": "system", "content": "You are an expert exam question generator. Always respond with valid, complete JSON only. No markdown formatting. Ensure all JSON objects are properly closed."},
+                        {"role": "user", "content": prompt},
+                    ],
+                    temperature=self.temperature,
+                    max_tokens=effective_max_tokens,
+                    extra_headers={
+                        "HTTP-Referer": "https://ptit-ocm.edu.vn",
+                        "X-Title": "PTIT Quiz Service",
+                    },
+                )
+                raw_content = response.choices[0].message.content
+                
+                # Check if response was truncated (finish_reason)
+                finish_reason = response.choices[0].finish_reason
+                if finish_reason == "length":
+                    logger.warning(f"Response was truncated (finish_reason=length). Consider increasing max_tokens.")
+                
+                return self._extract_json_from_response(raw_content)
+            except Exception as e:
+                error_str = str(e)
+                
+                # Check for rate limit error (429)
+                if "429" in error_str or "rate" in error_str.lower():
+                    # Longer wait for rate limits with jitter
+                    base_wait = 5.0 * (2 ** attempt)  # 5s, 10s, 20s
+                    jitter = random.uniform(0, 2)
+                    wait_time = min(base_wait + jitter, 60)  # Cap at 60 seconds
+                    logger.warning(f"Rate limit hit (attempt {attempt + 1}/{self.max_retries}). Waiting {wait_time:.1f}s...")
+                else:
+                    wait_time = 0.5 * (2 ** attempt)
+                    logger.warning(f"OpenRouter API call failed (attempt {attempt + 1}/{self.max_retries}): {e}")
+                
+                if attempt < self.max_retries - 1:
+                    await asyncio.sleep(wait_time)
+                else:
+                    raise
+
+    async def generate_mcq(self, passage: str, options: Optional[Dict[str, Any]] = None) -> MCQResult:
+        prompt = self._build_mcq_prompt(passage, options)
+        response_text = await self._call_with_retry(prompt)
+
+        try:
+            data = self._extract_json(response_text)
+            return MCQResult(
+                question=data["question"],
+                choices=data["choices"],
+                answer=data["answer"],
+                explanation=data["explanation"],
+                difficulty=data["difficulty"],
+            )
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            logger.error(f"Failed to parse MCQ response: {e}\nRaw response: {response_text}")
+            raise
+
+    async def generate_batch_mcq(
+        self, passage: str, num_questions: int, options: Optional[Dict[str, Any]] = None
+    ) -> BatchMCQResult:
+        """Generate multiple MCQ questions in a single API call"""
+        
+        prompt = self._build_batch_mcq_prompt(passage, num_questions, options)
+        
+        # Dynamic max_tokens calculation based on number of questions
+        # Each question needs ~400-600 tokens (question + 4 choices + explanation)
+        tokens_per_question = 600
+        estimated_tokens = num_questions * tokens_per_question + 500  # Buffer for JSON structure
+        dynamic_max_tokens = max(self.max_output_tokens, min(estimated_tokens, 16384))
+        
+        logger.debug(f"Generating {num_questions} questions with max_tokens={dynamic_max_tokens}")
+        
+        response_text = await self._call_with_retry(prompt, max_tokens=dynamic_max_tokens)
+
+        try:
+            data = self._extract_json(response_text)
+            
+            # Handle both array and object with "questions" key
+            if isinstance(data, dict) and "questions" in data:
+                questions_data = data["questions"]
+            elif isinstance(data, list):
+                questions_data = data
+            else:
+                raise ValueError(f"Expected array or object with 'questions' key, got {type(data)}")
+            
+            questions = []
+            required_keys = {'question', 'choices', 'answer'}
+            
+            for idx, q_data in enumerate(questions_data):
+                # Skip incomplete questions
+                if not isinstance(q_data, dict):
+                    logger.warning(f"Skipping non-dict question at index {idx}")
+                    continue
+                    
+                missing_keys = required_keys - set(q_data.keys())
+                if missing_keys:
+                    logger.warning(f"Skipping question {idx} missing keys: {missing_keys}")
+                    continue
+                
+                # Clean up choices if they have letter prefixes like "A) ..."
+                choices = q_data.get("choices", [])
+                cleaned_choices = []
+                for choice in choices:
+                    if isinstance(choice, str) and len(choice) > 2 and choice[1] in ")]:.-" and choice[0].upper() in "ABCD":
+                        cleaned_choices.append(choice[2:].strip())
+                    else:
+                        cleaned_choices.append(str(choice) if choice else "")
+                
+                questions.append(MCQResult(
+                    question=q_data["question"],
+                    choices=cleaned_choices if cleaned_choices else choices,
+                    answer=q_data["answer"],
+                    explanation=q_data.get("explanation", ""),
+                    difficulty=q_data.get("difficulty", "medium"),
+                ))
+            
+            if not questions:
+                raise ValueError("No valid questions generated after filtering incomplete responses")
+            
+            logger.info(f"Generated {len(questions)} questions in single API call")
+            return BatchMCQResult(questions=questions)
+            
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            logger.error(f"Failed to parse batch MCQ response: {e}\\nRaw response: {response_text[:500]}")
+            raise
+
+    async def refine_distractors(
+        self, passage: str, correct_answer: str, candidates: List[str]
+    ) -> DistractorResult:
+        prompt = self._build_distractor_prompt(passage, correct_answer, candidates)
+        response_text = await self._call_with_retry(prompt)
+
+        try:
+            distractors = self._extract_json(response_text)
+            if not isinstance(distractors, list) or len(distractors) != 3:
+                raise ValueError(f"Expected 3 distractors, got {len(distractors)}")
+            return DistractorResult(distractors=distractors)
+        except (json.JSONDecodeError, ValueError) as e:
+            logger.error(f"Failed to parse distractor response: {e}\nRaw response: {response_text[:500]}")
+            raise
+
+    async def generate_short_answer(
+        self, passage: str, options: Optional[Dict[str, Any]] = None
+    ) -> ShortAnswerResult:
+        prompt = self._build_short_answer_prompt(passage, options)
+        response_text = await self._call_with_retry(prompt)
+
+        try:
+            data = self._extract_json(response_text)
+            return ShortAnswerResult(
+                question=data["question"],
+                answer=data["answer"],
+                explanation=data["explanation"],
+                difficulty=data["difficulty"],
+            )
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            logger.error(f"Failed to parse short answer response: {e}\nRaw response: {response_text[:500]}")
+            raise
+
+    async def generate_true_false(
+        self, passage: str, options: Optional[Dict[str, Any]] = None
+    ) -> TrueFalseResult:
+        prompt = self._build_true_false_prompt(passage, options)
+        response_text = await self._call_with_retry(prompt)
+
+        try:
+            data = self._extract_json(response_text)
+            return TrueFalseResult(
+                statement=data["statement"],
+                answer=data["answer"],
+                explanation=data["explanation"],
+                difficulty=data["difficulty"],
+            )
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            logger.error(f"Failed to parse true/false response: {e}\nRaw response: {response_text[:500]}")
+            raise

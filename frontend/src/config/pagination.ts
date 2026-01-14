@@ -1,0 +1,64 @@
+export const PAGINATION_LIMITS = {
+  MAX_PAGE_SIZE: 100,
+} as const
+
+export const DASHBOARD_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 8,
+  PAGE_SIZE_OPTIONS: [4, 8, 12, 16] as const,
+} as const
+
+export const ADMIN_USERS_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 40, 50] as const,
+} as const
+
+export const ADMIN_CLASSES_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 40, 50] as const,
+} as const
+
+export const ADMIN_SHOP_ITEMS_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 40, 50] as const,
+} as const
+
+export const LIVE_ROOMS_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 40, 50] as const,
+} as const
+
+export const ASSIGNMENT_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 7,
+} as const
+
+export const ASSIGNMENT_GRADE_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 8,
+} as const
+
+export const STUDENT_GRADE_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+} as const
+
+export const CALENDAR_PAGINATION = {
+  UPCOMING_EVENTS_PAGE_SIZE: 4,
+} as const
+
+export const NOTIFICATIONS_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 50] as const,
+} as const
+
+export const GENERIC_PAGINATION = {
+  DEFAULT_PAGE_NUMBER: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  PAGE_SIZE_OPTIONS: [10, 20, 30, 40, 50] as const,
+} as const

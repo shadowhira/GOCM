@@ -1,0 +1,48 @@
+﻿{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+
+  "AllowedHosts": "*",
+
+  "ConnectionStrings": {
+    "DefaultConnection": "User Id=postgres.<project-ref>;Password=<DB_PASSWORD>;Server=<DB_HOST>;Port=5432;Database=postgres;Pooling=true;Maximum Pool Size=20;Minimum Pool Size=0;Connection Idle Lifetime=10;Connection Lifetime=300;"
+  },
+
+  "JwtSettings": {
+    "validIssuer": "OCM_Server",
+    "validAudience": "https://localhost:7006",
+    "expires": 3600,
+    "Key": "<JWT_SECRET_KEY>"
+  },
+
+  "Supabase": {
+    "Url": "https://<project-ref>.supabase.co",
+    "Key": "<SUPABASE_SECRET_OR_PUBLIC_KEY>"
+  },
+
+  "SeqServer": "http://localhost:5341",
+
+  "Livekit": {
+    "ServerUrl": "wss://<your-livekit>.livekit.cloud",
+    "Key": "<LIVEKIT_API_KEY>",
+    "Secret": "<LIVEKIT_API_SECRET>"
+  },
+
+  "PasswordReset": {
+    "BaseUrl": "http://localhost:3000/reset-password",
+    "ProductionBaseUrl": "https://your-domain/reset-password",
+    "Issuer": "OCM_Reset",
+    "Audience": "OCM_Reset_Client",
+    "TokenLifetimeMinutes": 5
+  },
+
+  "EmailSettings": {
+    "ApiKey": "<SENDGRID_API_KEY>",
+    "SenderName": "PTIT OCM",
+    "SenderEmail": "example@gmail.com"
+  }
+}

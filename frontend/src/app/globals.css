@@ -1,0 +1,1083 @@
+/* Base styles - Theme variables will be injected dynamically */
+@import "tailwindcss";
+
+html {
+  @apply overflow-x-hidden;
+  /* background-color: var(--color-background);
+  color: var(--color-foreground); */
+}
+
+body {
+  @apply !min-w-full;
+}
+
+/* Token gốc của hệ thống (đổi màu/chữ/bo góc toàn cục ở đây) */
+/* stylelint-disable-next-line at-rule-no-unknown */
+@theme {
+  /* Primary: Electric Blue */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* Secondary: Neon Cyan */
+  --color-secondary-50: #ecfeff;
+  --color-secondary-100: #cffafe;
+  --color-secondary-200: #a5f3fc;
+  --color-secondary-300: #67e8f9;
+  --color-secondary-400: #22d3ee;
+  --color-secondary-500: #06b6d4;
+  --color-secondary-600: #0891b2;
+  --color-secondary-700: #0e7490;
+  --color-secondary-800: #155e75;
+  --color-secondary-900: #164e63;
+
+  /* Accent: Neon Purple */
+  --color-accent-50: #faf5ff;
+  --color-accent-100: #f3e8ff;
+  --color-accent-200: #e9d5ff;
+  --color-accent-300: #d8b4fe;
+  --color-accent-400: #c084fc;
+  --color-accent-500: #a855f7;
+  --color-accent-600: #9333ea;
+  --color-accent-700: #7e22ce;
+  --color-accent-800: #6b21a8;
+  --color-accent-900: #581c87;
+
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  --color-grade-excellent: #22c55e;
+  --color-grade-good: #4ade80;
+  --color-grade-average: #fbbf24;
+  --color-grade-poor: #f87171;
+
+  /* Light Mode - High Contrast */
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #475569;
+  --color-border: #000;
+  --color-input: #ffffff;
+  --color-ring: #3b82f6;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --font-sans: "Mulish", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, ui-monospace, monospace;
+
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-DEFAULT: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  --size-modal-lg: 56rem;
+  --size-modal-height: 42rem;
+  --size-invite-list: 25rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+.max-w-modal-lg {
+  max-width: var(--size-modal-lg);
+}
+
+.h-modal {
+  max-height: calc(100vh - 4rem);
+  height: auto;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.glass-effect {
+  backdrop-filter: blur(12px);
+  background: rgb(255 255 255 / 0.95);
+  border: 2px solid rgb(203 213 225 / 0.8);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-input) inset !important;
+  -webkit-text-fill-color: var(--color-foreground) !important;
+  border-color: var(--color-border) !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Multi-line clamp utilities (no plugin required) */
+.line-clamp-5,
+.line-clamp-7 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-5 {
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+}
+
+.line-clamp-7 {
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
+}
+
+/* ===================
+   TUỲ BIẾN LIVEKIT UI
+   - Nhóm base: map token LiveKit -> token hệ thống
+   - Nhóm components: chỉnh layout/chat/control bar
+===================== */
+/* LiveKit theming */
+@layer base {
+
+  /* Vùng bao bên ngoài video call (đổi padding/nền tổng) */
+  main[data-lk-theme^="ocm"] {
+    height: 100vh;
+    /* Chiếm toàn chiều cao viewport để LiveKit full màn hình */
+    /* padding: clamp(1rem, 2vw, 2.5rem); Khoảng trống giữa LiveKit và phần còn lại */
+    background-color: var(--color-background);
+    /* Nền đồng bộ với theme app */
+    transition: background-color 150ms ease;
+    /* Mượt mà khi đổi theme */
+  }
+
+  /* Token chung cho cả light + dark (font, radius, shadow...) */
+  [data-lk-theme^="ocm"] {
+    --lk-font-family: var(--font-sans);
+    /* Font chữ chính cho toàn bộ UI LiveKit */
+    --lk-font-size: 16px;
+    /* Cỡ chữ mặc định */
+    --lk-line-height: 1.5;
+    /* Chiều cao dòng */
+    --lk-border-radius: var(--radius-2xl);
+    /* Bo góc chuẩn cho component */
+    --lk-grid-gap: 1rem;
+    /* Khoảng cách giữa các tile/video */
+    --lk-control-bar-height: 70px;
+    /* Chiều cao thanh điều khiển */
+    --lk-chat-header-height: 64px;
+    /* Chiều cao phần header chat */
+    --lk-box-shadow: var(--shadow-xl);
+    /* Đổ bóng nhẹ cho khối chính */
+    --lk-drop-shadow: var(--shadow-2xl);
+    /* Đổ bóng nổi khi hover */
+    --lk-speaking-indicator-width: 3px;
+    /* Độ dày viền highlight khi ai đó nói */
+    --lk-icon-mic: var(--color-primary-500);
+    /* Màu icon mic ở metadata */
+  }
+
+  /* Profile màu LIGHT MODE - chỉnh các biến --lk-* ở đây */
+  [data-lk-theme="ocm-light"] {
+    color-scheme: light;
+    /* Báo cho browser rằng đây là theme sáng */
+    --lk-bg: var(--color-background);
+    /* Nền chính của layout */
+    --lk-bg2: var(--color-card);
+    /* Nền phụ (card) */
+    --lk-bg3: var(--color-muted);
+    /* Nền cho tile/chat */
+    --lk-bg4: var(--color-primary-50);
+    /* Nền hover */
+    --lk-bg5: var(--color-primary-100);
+    /* Nền active */
+    --lk-fg: var(--color-foreground);
+    /* Màu chữ chính */
+    --lk-fg2: var(--color-muted-foreground);
+    /* Chữ phụ (subtitle) */
+    --lk-fg3: var(--color-primary-800);
+    /* Chữ nhấn (badge/icon) */
+    --lk-fg4: var(--color-primary-700);
+    /* Icon muted */
+    --lk-fg5: var(--color-primary-600);
+    /* Metadata phụ */
+    --lk-border-color: var(--color-border);
+    /* Viền card */
+    --lk-control-fg: var(--color-foreground);
+    /* Màu chữ của button control */
+    --lk-control-bg: var(--color-card);
+    /* Nền button control default */
+    --lk-control-hover-bg: var(--color-muted);
+    /* Nền button khi hover */
+    --lk-control-active-bg: var(--color-primary-400);
+    /* Nền button đang bật */
+    --lk-control-active-hover-bg: var(--color-primary-100);
+    /* Hover khi đang bật */
+    --lk-accent-fg: #ffffff;
+    /* Chữ trên nút accent (screen share, join) */
+    --lk-accent-bg: var(--color-primary-700);
+    /* Nền accent chính */
+    --lk-accent2: var(--color-primary-600);
+    /* Accent hover */
+    --lk-accent3: var(--color-primary-700);
+    /* Accent active */
+    --lk-accent4: var(--color-secondary-500);
+    /* Accent active hover */
+    --lk-danger-fg: #ffffff;
+    /* Chữ trên nút rời phòng */
+    --lk-danger: var(--color-error);
+    /* Nền nút rời phòng */
+    --lk-danger2: var(--color-error);
+    /* Hover nút rời phòng */
+    --lk-danger3: var(--color-error);
+    /* Active nút rời phòng */
+    --lk-danger4: var(--color-error);
+    /* Active + hover */
+    --lk-success-fg: #ffffff;
+    /* Chữ trên badge trạng thái tốt */
+    --lk-success: var(--color-success);
+    /* Badge kết nối tốt */
+    --lk-success2: var(--color-success);
+    /* Hover badge success */
+    --lk-success3: var(--color-success);
+    /* Active badge success */
+    --lk-success4: var(--color-success);
+    /* Active hover success */
+    --lk-connection-excellent: var(--color-success);
+    /* Màu cột tín hiệu excellent */
+    --lk-connection-good: var(--color-warning);
+    /* Màu cột tín hiệu good */
+    --lk-connection-poor: var(--color-error);
+    /* Màu cột tín hiệu poor */
+  }
+
+  /* Profile màu DARK MODE - chỉnh các biến --lk-* ở đây */
+  [data-lk-theme="ocm-dark"] {
+    color-scheme: dark;
+    /* Báo cho browser biết đang ở theme tối */
+    --lk-bg: var(--color-background);
+    /* Nền tổng thể */
+    --lk-bg2: var(--color-card);
+    /* Nền card tối */
+    /* --lk-bg3: var(--color-muted); Nền tile/chat */
+    --lk-bg4: var(--color-primary-900);
+    /* Hover */
+    --lk-bg5: var(--color-primary-800);
+    /* Active */
+    --lk-fg: var(--color-foreground);
+    /* Chữ chính */
+    --lk-fg2: var(--color-muted-foreground);
+    /* Chữ phụ */
+    --lk-fg3: var(--color-primary-200);
+    /* Chữ mờ */
+    --lk-fg4: var(--color-primary-300);
+    /* Icon muted */
+    --lk-fg5: var(--color-primary-400);
+    /* Metadata */
+    --lk-border-color: var(--color-border);
+    /* Viền card tối */
+    --lk-control-fg: var(--color-foreground);
+    /* Chữ nút control */
+    --lk-control-bg: var(--color-card);
+    /* Nền nút control */
+    --lk-control-hover-bg: var(--color-muted);
+    /* Hover control */
+    --lk-control-active-bg: var(--color-primary-700);
+    /* Active control */
+    --lk-control-active-hover-bg: var(--color-primary-800);
+    /* Active hover */
+    --lk-accent-fg: #ffffff;
+    /* Chữ accent */
+    --lk-accent-bg: var(--color-primary-700);
+    /* Accent chính */
+    --lk-accent2: var(--color-primary-400);
+    /* Hover accent */
+    --lk-accent3: var(--color-primary-300);
+    /* Active accent */
+    --lk-accent4: var(--color-secondary-600);
+    /* Active hover accent */
+    --lk-danger-fg: #ffffff;
+    /* Chữ nút rời phòng */
+    --lk-danger: var(--color-error);
+    /* Nền nút rời phòng */
+    --lk-danger2: var(--color-error);
+    /* Hover rời phòng */
+    --lk-danger3: var(--color-error);
+    /* Active rời phòng */
+    --lk-danger4: var(--color-error);
+    /* Active hover rời phòng */
+    --lk-success-fg: #ffffff;
+    /* Chữ badge tốt */
+    --lk-success: var(--color-success);
+    /* Badge tốt */
+    --lk-success2: var(--color-success);
+    /* Hover badge */
+    --lk-success3: var(--color-success);
+    /* Active badge */
+    --lk-success4: var(--color-success);
+    /* Active hover badge */
+    --lk-connection-excellent: var(--color-success);
+    /* Màu tín hiệu tốt */
+    --lk-connection-good: var(--color-warning);
+    /* Màu tín hiệu trung bình */
+    --lk-connection-poor: var(--color-error);
+    /* Màu tín hiệu kém */
+  }
+}
+
+/* Các lớp UI cụ thể của LiveKit (layout, chat, button...).
+   Muốn đổi spacing/bo góc/hộp màu → chỉnh từng block bên dưới. */
+@layer components {
+
+  /* Container tổng của LiveKit, để trống nền app */
+  [data-lk-theme^="ocm"] .lk-room-container {
+    height: 100%;
+    /* Cho phép chiếm toàn bộ chiều cao main container */
+    padding: 0;
+    /* Để LiveKit bám sát vùng bao ngoài (đã padding ở main) */
+    background: transparent;
+    /* Trong suốt để thấy nền app */
+  }
+
+  /* Khối chính chứa video + control bar */
+  [data-lk-theme^="ocm"] .lk-video-conference {
+    position: relative;
+    /* Cho phép đặt overlay (ví dụ notification) */
+    height: 100%;
+    /* Chiếm hết chiều cao container */
+    padding: clamp(1rem, 1.5vw, 2rem);
+    /* Khoảng trống nội bộ linh hoạt */
+    /* border-radius: var(--radius-3xl); Bo góc lớn cho khối chính */
+    background: var(--lk-bg2);
+    /* Nền card theo token theme */
+    border: 1px solid var(--lk-border-color);
+    /* Viền để tách khỏi nền */
+    box-shadow: var(--lk-box-shadow);
+    /* Đổ bóng nhẹ tạo chiều sâu */
+    gap: 1rem;
+    /* Khoảng cách giữa layout và control bar */
+  }
+
+  [data-lk-theme^="ocm"] .lk-video-conference-inner {
+    background: transparent;
+    /* Giữ nội dung trong suốt để thấy nền cha */
+    border-radius: var(--radius-2xl);
+    /* Bo góc vừa cho nội dung */
+    gap: 1rem;
+    /* Khoảng cách giữa layout và panel chat */
+  }
+
+  /* Khối lưới và focus view (phần tiles) */
+  [data-lk-theme^="ocm"] .lk-grid-layout-wrapper,
+  [data-lk-theme^="ocm"] .lk-focus-layout-wrapper {
+    /* background: var(--lk-bg); Nền trung tính để nổi video */
+    /* border-radius: var(--radius-2xl); Bo mềm cho vùng video */
+    /* border: 1px solid var(--lk-border-color); Viền mảnh phân tách */
+    /* padding: clamp(0.75rem, 1vw, 1.25rem); Khoảng trống quanh tiles */
+  }
+
+  [data-lk-theme^="ocm"] .lk-focus-layout-container,
+  [data-lk-theme^="ocm"] .lk-grid-layout,
+  [data-lk-theme^="ocm"] .lk-carousel {
+    background: var(--lk-bg2);
+    /* Nền phụ đồng bộ token */
+    border-radius: var(--radius-2xl);
+    /* Bo góc mềm cho từng layout */
+  }
+
+  [data-lk-theme^="ocm"] .lk-carousel {
+    border: 1px solid var(--lk-border-color);
+    /* Viền rõ để phân tầng */
+    padding: 0.5rem;
+    /* Khoảng trống cho các thumbnail */
+  }
+
+  /* Thanh điều khiển mic/cam/chat/leave */
+  [data-lk-theme^="ocm"] .lk-control-bar,
+  [data-lk-theme^="ocm"] .lk-agent-control-bar {
+    /* background-color: var(--lk-bg3); Nền control bar cùng tone muted */
+    border: 1px solid var(--lk-border-color);
+    /* Gỡ đường viền mặc định */
+    border-radius: var(--radius-full);
+    /* Làm thanh điều khiển dạng pill */
+    padding: 0.5rem 1.5rem;
+    /* Khoảng trống cho icon */
+    margin-top: 0.5rem;
+    /* Tạo khoảng cách với lưới video */
+    box-shadow: var(--lk-drop-shadow);
+    /* Bóng nổi giúp nổi bật */
+    backdrop-filter: blur(12px);
+    /* Hiệu ứng glassmorphism */
+    background-color: var(--lk-bg2);
+    justify-content: center;
+    width: fit-content !important;
+    margin: 0 auto;
+  }
+
+  /* Style chung cho các nút trong control bar */
+  [data-lk-theme^="ocm"] .lk-button,
+  [data-lk-theme^="ocm"] .lk-start-audio-button,
+  [data-lk-theme^="ocm"] .lk-chat-toggle,
+  [data-lk-theme^="ocm"] .lk-disconnect-button {
+    font-weight: 600;
+    /* Đậm để dễ đọc */
+    border-radius: var(--radius-lg);
+    /* Bo góc pill nhỏ */
+    transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+    /* Hiệu ứng hover đồng nhất */
+  }
+
+  [data-lk-theme^="ocm"] .lk-button:not(:disabled):hover,
+  [data-lk-theme^="ocm"] .lk-start-audio-button:not(:disabled):hover,
+  [data-lk-theme^="ocm"] .lk-chat-toggle:not(:disabled):hover,
+  [data-lk-theme^="ocm"] .lk-disconnect-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    /* Đẩy nhẹ lên khi hover */
+    /* box-shadow: var(--lk-box-shadow); Thêm bóng để nhấn mạnh trạng thái */
+  }
+
+  /* Tile hiển thị từng participant */
+  [data-lk-theme^="ocm"] .lk-participant-tile {
+    background: var(--lk-bg3);
+    /* Nền trung gian cho video tile */
+    border-radius: var(--radius-2xl);
+    /* Bo góc mềm hơn */
+    overflow: hidden;
+    /* Giữ nội dung không tràn góc bo */
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-placeholder {
+    background: var(--lk-bg3);
+    /* Phủ nền trung tính để icon không biến mất ở theme sáng */
+    border-radius: var(--radius-2xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* [data-lk-theme^="ocm"] .lk-participant-placeholder svg {
+    width: 70%;
+    height: 70%;
+  } */
+
+  [data-lk-theme^="ocm"] .lk-participant-placeholder svg path {
+    fill: var(--lk-fg4);
+    /* Dùng màu chữ phụ theo theme để có độ tương phản */
+    fill-opacity: 0.7;
+  }
+
+  [data-lk-theme^="ocm"] .lk-chat-header svg path {
+    fill: var(--color-foreground);
+    /* Dùng màu chữ phụ theo theme để có độ tương phản */
+    fill-opacity: 0.7;
+  }
+
+  main[data-lk-theme^="ocm"] .lk-chat-toggle[data-lk-unread-msgs]:not([data-lk-unread-msgs="0"])::after {
+    background: var(--color-error);
+    color: #fff;
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-tile .lk-participant-placeholder {
+    border: 2px solid var(--lk-border-color);
+    /* Viền nhẹ quanh placeholder */
+    /* margin: 0.5rem; Khoảng trống so với viền tile */
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-tile::after {
+    border-color: var(--lk-accent-bg);
+    /* Màu viền highlight người đang nói */
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-metadata {
+    /* background-color: var(--lk-bg2); Nền nhạt cho tên + trạng thái */
+    border-radius: var(--radius-md);
+    /* Bo góc nhãn tên */
+    padding: 0.4rem 0.75rem;
+    /* Khoảng trống cho text */
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-metadata-item {
+    /* background-color: var(--lk-bg4); Nền chip nhỏ cho icon mic/cam */
+    border-radius: var(--radius-sm);
+    /* Bo nhẹ để giống chip */
+  }
+
+  /* Panel chat bên phải */
+  [data-lk-theme^="ocm"] .lk-chat {
+    background-color: var(--lk-bg2);
+    /* Nền khớp card chính */
+    border: 1px solid var(--lk-border-color);
+    /* Phân cách với vùng video */
+    border-radius: var(--radius-2xl);
+    /* Bo góc đồng bộ tổng thể */
+    padding: 0.75rem;
+    /* Khoảng trống nội dung chat */
+    box-shadow: var(--lk-box-shadow);
+    /* Đổ bóng cho panel nổi */
+  }
+
+  /* Bong bóng chat (tin nhắn của mình) */
+  [data-lk-theme^="ocm"] .lk-chat-entry[data-lk-message-origin="local"] .lk-message-body {
+    background: linear-gradient(120deg, var(--color-primary-500), var(--color-primary-600));
+    /* Gradient primary cho tin nhắn mình */
+    color: #ffffff;
+    /* Chữ trắng tạo tương phản */
+  }
+
+  /* Ảnh đại diện trong chat */
+  [data-lk-theme^="ocm"] .lk-chat-entry img {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Bong bóng chat (tin nhắn của người khác) */
+  [data-lk-theme^="ocm"] .lk-chat-entry[data-lk-message-origin="remote"] .lk-message-body {
+    background: var(--lk-bg3);
+    /* Nền trung tính cho tin nhắn người khác */
+    color: var(--lk-fg);
+    /* Chữ dùng màu foreground chung */
+  }
+
+  /* Vùng input chat */
+  [data-lk-theme^="ocm"] .lk-chat-form {
+    background: var(--lk-bg3);
+    /* Thanh nhập cùng tone panel */
+    border: 1px solid var(--lk-border-color);
+    /* Viền phân cách input với danh sách chat */
+    border-radius: var(--radius-xl);
+    /* Bo góc nhẹ cho form */
+    padding: 0.75rem 1rem;
+    /* Khoảng trống cho text + nút gửi */
+  }
+
+  /* Màn hình PreJoin (chọn mic/cam trước khi vào) */
+  [data-lk-theme^="ocm"] .lk-prejoin {
+    border-radius: var(--radius-3xl);
+    /* Bo lớn cho modal prejoin */
+    border: 1px solid var(--lk-border-color);
+    /* Viền đồng bộ token */
+    box-shadow: var(--lk-box-shadow);
+    /* Bóng nhẹ tạo chiều sâu */
+    background: var(--lk-bg2);
+    /* Nền card sáng/tối theo theme */
+    padding: 2rem;
+    /* Khoảng trống rộng giúp thoáng hơn */
+  }
+
+  [data-lk-theme^="ocm"] .lk-prejoin .lk-button-group-container>.lk-button-group {
+    border-radius: var(--radius-xl);
+    /* Bo góc cho group nút chọn thiết bị */
+    background: var(--lk-bg3);
+    /* Nền phụ dịu hơn */
+    padding: 0.5rem;
+    /* Khoảng trống giữa các nút */
+  }
+
+  /* Nút chuyển trang + indicator khi có nhiều tile */
+  [data-lk-theme^="ocm"] .lk-pagination-control,
+  [data-lk-theme^="ocm"] .lk-pagination-indicator {
+    background-color: var(--lk-bg3);
+    /* Nền muted để không quá nổi */
+    border: 1px solid var(--lk-border-color);
+    /* Viền để dễ nhận biết */
+    box-shadow: var(--lk-drop-shadow);
+    /* Bóng nhẹ hỗ trợ nổi bật */
+  }
+
+  [data-lk-theme^="ocm"] .lk-carousel::-webkit-scrollbar,
+  [data-lk-theme^="ocm"] .lk-grid-layout::-webkit-scrollbar {
+    width: 0.5rem;
+    /* Độ rộng scrollbar tuỳ chỉnh */
+    height: 0.5rem;
+    /* Độ cao scrollbar ngang */
+  }
+
+  [data-lk-theme^="ocm"] .lk-carousel::-webkit-scrollbar-thumb,
+  [data-lk-theme^="ocm"] .lk-grid-layout::-webkit-scrollbar-thumb {
+    background-color: var(--lk-bg4);
+    /* Màu thanh kéo trùng palette */
+    border-radius: var(--radius-full);
+    /* Bo tròn để nhìn hiện đại */
+  }
+}
+
+@layer utilities {
+  .bg-primary-soft {
+    background-color: var(--color-primary-50);
+  }
+
+  .bg-secondary-soft {
+    background-color: var(--color-secondary-50);
+  }
+
+  .bg-success-soft {
+    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+  }
+
+  .bg-info-soft {
+    background-color: color-mix(in srgb, var(--color-info) 12%, transparent);
+  }
+
+  .bg-accent-soft {
+    background-color: var(--color-accent-50);
+  }
+
+  /* Invite member dialog list max height (use design token instead of arbitrary Tailwind value) */
+  .max-h-invite-list {
+    max-height: var(--size-invite-list);
+  }
+}
+
+/* ===================
+   RESPONSIVE LIVEKIT
+   - Media queries cho live room responsive
+   - Mobile-first approach
+===================== */
+
+/* ===== RESPONSIVE CLASSES ===== */
+.lk-responsive-mobile,
+.lk-responsive-tablet,
+.lk-responsive-desktop {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== TABLET BREAKPOINT (768px - 1024px) ===== */
+@media (max-width: 1024px) {
+  /* Video conference container */
+  [data-lk-theme^="ocm"] .lk-video-conference {
+    padding: clamp(0.5rem, 1vw, 1rem);
+    gap: 0.75rem;
+  }
+
+  /* Focus layout - stack vertically on smaller screens */
+  [data-lk-theme^="ocm"] .lk-focus-layout-container {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 3fr 1fr;
+  }
+
+  /* Carousel becomes horizontal strip at bottom */
+  [data-lk-theme^="ocm"] .lk-carousel {
+    flex-direction: row !important;
+    max-height: 150px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  [data-lk-theme^="ocm"] .lk-carousel[data-lk-orientation="vertical"] {
+    flex-direction: row !important;
+  }
+
+  /* Chat as overlay */
+  [data-lk-theme^="ocm"] .lk-chat {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 80vw;
+    z-index: 100;
+    border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  /* Control bar adjustments */
+  [data-lk-theme^="ocm"] .lk-control-bar {
+    padding: 0.4rem 1rem;
+    gap: 0.5rem;
+  }
+
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button-group {
+    gap: 0.25rem;
+  }
+
+  /* Hide text labels on control bar buttons */
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button span:not(.sr-only),
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button span:not(.sr-only) {
+    display: none;
+  }
+
+  /* Participant tile adjustments */
+  [data-lk-theme^="ocm"] .lk-participant-tile {
+    border-radius: var(--radius-xl);
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-metadata {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* PreJoin adjustments */
+  [data-lk-theme^="ocm"] .lk-prejoin {
+    padding: 1.5rem;
+    max-width: 90vw;
+  }
+}
+
+/* ===== MOBILE BREAKPOINT (< 768px) ===== */
+@media (max-width: 768px) {
+  /* Main container */
+  main[data-lk-theme^="ocm"] {
+    padding: 0;
+  }
+
+  /* Video conference */
+  [data-lk-theme^="ocm"] .lk-video-conference {
+    padding: 0.5rem;
+    border-radius: 0;
+    border: none;
+    gap: 0.5rem;
+  }
+
+  [data-lk-theme^="ocm"] .lk-video-conference-inner {
+    gap: 0.5rem;
+  }
+
+  /* Grid layout */
+  [data-lk-theme^="ocm"] .lk-grid-layout-wrapper,
+  [data-lk-theme^="ocm"] .lk-focus-layout-wrapper {
+    border-radius: var(--radius-lg);
+  }
+
+  [data-lk-theme^="ocm"] .lk-grid-layout {
+    --lk-grid-gap: 0.5rem;
+    border-radius: var(--radius-lg);
+  }
+
+  /* Focus layout full vertical stack */
+  [data-lk-theme^="ocm"] .lk-focus-layout-container {
+    grid-template-rows: 1fr auto;
+  }
+
+  /* Carousel - horizontal thumbnail strip */
+  [data-lk-theme^="ocm"] .lk-carousel {
+    max-height: 100px;
+    padding: 0.25rem;
+    gap: 0.25rem;
+  }
+
+  /* Chat as bottom sheet */
+  [data-lk-theme^="ocm"] .lk-chat {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 70vh;
+    max-height: 70vh;
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    z-index: 100;
+  }
+
+  /* Chat header sticky */
+  [data-lk-theme^="ocm"] .lk-chat-header {
+    position: sticky;
+    top: 0;
+    background: var(--lk-bg2);
+    z-index: 1;
+    padding: 1rem;
+    border-bottom: 1px solid var(--lk-border-color);
+  }
+
+  /* Control bar - compact mode */
+  [data-lk-theme^="ocm"] .lk-control-bar {
+    padding: 0.35rem 0.75rem;
+    gap: 0.25rem;
+    border-radius: var(--radius-2xl);
+    margin-bottom: 0.5rem;
+  }
+
+  /* Smaller buttons on mobile */
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button,
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button {
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button svg,
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Button group menu */
+  [data-lk-theme^="ocm"] .lk-button-group-menu {
+    display: none;
+  }
+
+  /* Participant tile */
+  [data-lk-theme^="ocm"] .lk-participant-tile {
+    border-radius: var(--radius-lg);
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-metadata {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.65rem;
+  }
+
+  [data-lk-theme^="ocm"] .lk-participant-metadata-item {
+    gap: 0.15rem;
+  }
+
+  /* Focus toggle smaller */
+  [data-lk-theme^="ocm"] .lk-focus-toggle-button {
+    padding: 0.25rem;
+  }
+
+  /* Pagination controls */
+  [data-lk-theme^="ocm"] .lk-pagination-control {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  [data-lk-theme^="ocm"] .lk-pagination-control .lk-button {
+    padding: 0.25rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  /* PreJoin */
+  [data-lk-theme^="ocm"] .lk-prejoin {
+    padding: 1rem;
+    margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+    border-radius: var(--radius-2xl);
+  }
+
+  [data-lk-theme^="ocm"] .lk-prejoin .lk-button-group-container {
+    flex-direction: column;
+  }
+}
+
+/* ===== SMALL MOBILE (< 480px) ===== */
+@media (max-width: 480px) {
+  /* Even more compact control bar */
+  [data-lk-theme^="ocm"] .lk-control-bar {
+    padding: 0.25rem 0.5rem;
+    gap: 0.15rem;
+  }
+
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button,
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button {
+    padding: 0.35rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button svg,
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Chat takes more space */
+  [data-lk-theme^="ocm"] .lk-chat {
+    height: 80vh;
+    max-height: 80vh;
+  }
+
+  /* Carousel even smaller */
+  [data-lk-theme^="ocm"] .lk-carousel {
+    max-height: 80px;
+  }
+
+  /* Single column grid */
+  [data-lk-theme^="ocm"] .lk-grid-layout {
+    --lk-grid-gap: 0.25rem;
+  }
+
+  /* Participant name truncate more aggressively */
+  [data-lk-theme^="ocm"] .lk-participant-name {
+    max-width: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ===== LANDSCAPE MOBILE ===== */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Adjust for landscape mobile */
+  [data-lk-theme^="ocm"] .lk-video-conference {
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Grid layout 2 columns in landscape */
+  [data-lk-theme^="ocm"] .lk-grid-layout {
+    --lk-grid-gap: 0.25rem;
+  }
+
+  /* Focus layout side by side */
+  [data-lk-theme^="ocm"] .lk-focus-layout-container {
+    grid-template-columns: 3fr 1fr !important;
+    grid-template-rows: 1fr;
+  }
+
+  /* Carousel vertical on right */
+  [data-lk-theme^="ocm"] .lk-carousel {
+    flex-direction: column !important;
+    max-height: none;
+    max-width: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Control bar at bottom center */
+  [data-lk-theme^="ocm"] .lk-control-bar {
+    position: fixed;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+  }
+
+  /* Chat takes full height but narrower */
+  [data-lk-theme^="ocm"] .lk-chat {
+    height: 100%;
+    max-height: 100%;
+    width: 300px;
+    max-width: 50vw;
+    border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+  }
+}
+
+/* ===== TOUCH DEVICE ENHANCEMENTS ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-button,
+  [data-lk-theme^="ocm"] .lk-control-bar .lk-disconnect-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Focus toggle easier to tap */
+  [data-lk-theme^="ocm"] .lk-focus-toggle-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Remove hover effects that don't work on touch */
+  [data-lk-theme^="ocm"] .lk-button:hover,
+  [data-lk-theme^="ocm"] .lk-participant-tile:hover .lk-focus-toggle-button {
+    transform: none;
+  }
+
+  /* Always show focus toggle on touch devices */
+  [data-lk-theme^="ocm"] .lk-participant-tile .lk-focus-toggle-button {
+    opacity: 0.7;
+  }
+}
+
+/* ===== CHAT BOTTOM SHEET STYLES ===== */
+.lk-chat-bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: var(--lk-bg2);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  box-shadow: var(--lk-drop-shadow);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.lk-chat-bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.lk-chat-bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--lk-fg4);
+  border-radius: var(--radius-full);
+  margin: 0.75rem auto;
+  cursor: grab;
+}
+
+.lk-chat-bottom-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem 0.75rem;
+  border-bottom: 1px solid var(--lk-border-color);
+}
+
+.lk-chat-bottom-sheet-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Chat overlay backdrop */
+.lk-chat-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lk-chat-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}

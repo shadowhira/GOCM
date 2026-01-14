@@ -1,0 +1,209 @@
+import * as React from "react";
+import type { Participant } from "livekit-client";
+import { Track } from "livekit-client";
+import type {
+  ParticipantClickEvent,
+  TrackReferenceOrPlaceholder,
+} from "@livekit/components-core";
+import {
+  isTrackReference,
+  isTrackReferencePinned,
+} from "@livekit/components-core";
+import {
+  ConnectionQualityIndicator,
+  ParticipantName,
+  TrackMutedIndicator,
+  FocusToggle,
+  ParticipantPlaceholder,
+  ScreenShareIcon,
+  VideoTrack,
+  AudioTrack,
+} from "@livekit/components-react";
+import {
+  ParticipantContext,
+  TrackRefContext,
+  useEnsureTrackRef,
+  useFeatureContext,
+  useMaybeLayoutContext,
+  useMaybeParticipantContext,
+  useMaybeTrackRefContext,
+  useParticipantTile,
+} from "@livekit/components-react";
+
+import { Hand } from "lucide-react";
+import { useTranslations } from "next-intl";
+/**
+ * The `ParticipantContextIfNeeded` component only creates a `ParticipantContext`
+ * if there is no `ParticipantContext` already.
+ * @example
+ * ```tsx
+ * <ParticipantContextIfNeeded participant={trackReference.participant}>
+ *  ...
+ * </ParticipantContextIfNeeded>
+ * ```
+ * @public
+ */
+export function ParticipantContextIfNeeded(
+  props: React.PropsWithChildren<{
+    participant?: Participant;
+  }>
+) {
+  const hasContext = !!useMaybeParticipantContext();
+  return props.participant && !hasContext ? (
+    <ParticipantContext.Provider value={props.participant}>
+      {props.children}
+    </ParticipantContext.Provider>
+  ) : (
+    <>{props.children}</>
+  );
+}
+
+/**
+ * Only create a `TrackRefContext` if there is no `TrackRefContext` already.
+ * @internal
+ */
+export function TrackRefContextIfNeeded(
+  props: React.PropsWithChildren<{
+    trackRef?: TrackReferenceOrPlaceholder;
+  }>
+) {
+  const hasContext = !!useMaybeTrackRefContext();
+  return props.trackRef && !hasContext ? (
+    <TrackRefContext.Provider value={props.trackRef}>
+      {props.children}
+    </TrackRefContext.Provider>
+  ) : (
+    <>{props.children}</>
+  );
+}
+
+/** @public */
+export interface ParticipantTileProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  /** The track reference to display. */
+  trackRef?: TrackReferenceOrPlaceholder;
+  disableSpeakingIndicator?: boolean;
+
+  onParticipantClick?: (event: ParticipantClickEvent) => void;
+  raisedHandParticipantIndentity ?: Set<string>,
+}
+
+/**
+ * The `ParticipantTile` component is the base utility wrapper for displaying a visual representation of a participant.
+ * This component can be used as a child of the `TrackLoop` component or by passing a track reference as property.
+ *
+ * @example Using the `ParticipantTile` component with a track reference:
+ * ```tsx
+ * <ParticipantTile trackRef={trackRef} />
+ * ```
+ * @example Using the `ParticipantTile` component as a child of the `TrackLoop` component:
+ * ```tsx
+ * <TrackLoop>
+ *  <ParticipantTile />
+ * </TrackLoop>
+ * ```
+ * @public
+ */
+export const ParticipantTile: (
+  props: ParticipantTileProps & React.RefAttributes<HTMLDivElement>
+) => React.ReactNode = /* @__PURE__ */ React.forwardRef<
+  HTMLDivElement,
+  ParticipantTileProps
+>(function ParticipantTile(
+  {
+    trackRef,
+    children,
+    onParticipantClick,
+    disableSpeakingIndicator,
+    raisedHandParticipantIndentity,
+    ...htmlProps
+  }: ParticipantTileProps,
+  ref
+) {
+  const t = useTranslations();
+  const trackReference = useEnsureTrackRef(trackRef);
+
+  const { elementProps } = useParticipantTile<HTMLDivElement>({
+    htmlProps,
+    disableSpeakingIndicator,
+    onParticipantClick,
+    trackRef: trackReference,
+  });
+  const layoutContext = useMaybeLayoutContext();
+
+  const autoManageSubscription = useFeatureContext()?.autoSubscription;
+
+  const handleSubscribe = React.useCallback(
+    (subscribed: boolean) => {
+      if (
+        trackReference.source &&
+        !subscribed &&
+        layoutContext &&
+        layoutContext.pin.dispatch &&
+        isTrackReferencePinned(trackReference, layoutContext.pin.state)
+      ) {
+        layoutContext.pin.dispatch({ msg: "clear_pin" });
+      }
+    },
+    [trackReference, layoutContext]
+  );
+
+  return (
+    <div ref={ref} style={{ position: "relative" }} {...elementProps}>
+      <TrackRefContextIfNeeded trackRef={trackReference}>
+        <ParticipantContextIfNeeded participant={trackReference.participant}>
+          {children ?? (
+            <>
+              {isTrackReference(trackReference) &&
+              (trackReference.publication?.kind === "video" ||
+                trackReference.source === Track.Source.Camera ||
+                trackReference.source === Track.Source.ScreenShare) ? (
+                <VideoTrack
+                  trackRef={trackReference}
+                  onSubscriptionStatusChanged={handleSubscribe}
+                  manageSubscription={autoManageSubscription}
+                />
+              ) : (
+                isTrackReference(trackReference) && (
+                  <AudioTrack
+                    trackRef={trackReference}
+                    onSubscriptionStatusChanged={handleSubscribe}
+                  />
+                )
+              )}
+              <div className="lk-participant-placeholder">
+                <ParticipantPlaceholder />
+              </div>
+              <div className="lk-participant-metadata">
+                {raisedHandParticipantIndentity?.has(trackReference.participant.identity) && <Hand size={32} color="#ffd500" strokeWidth={1.5} /> }
+                <div className="lk-participant-metadata-item" style={{color: "#fff"}}>
+                  {trackReference.source === Track.Source.Camera ? (
+                    <>
+                      <TrackMutedIndicator
+                        trackRef={{
+                          participant: trackReference.participant,
+                          source: Track.Source.Microphone,
+                        }}
+                        show={"muted"}
+                      ></TrackMutedIndicator>
+                      <ParticipantName />
+                    </>
+                  ) : (
+                    <>
+                      <ScreenShareIcon style={{ marginRight: "0.25rem" }} />
+                      <ParticipantName>
+                        {t("live_room_participant_screen_suffix")}
+                      </ParticipantName>
+                    </>
+                  )}
+                </div>
+                <ConnectionQualityIndicator className="lk-participant-metadata-item" />
+              </div>
+            </>
+          )}
+          <FocusToggle trackRef={trackReference} />
+        </ParticipantContextIfNeeded>
+      </TrackRefContextIfNeeded>
+    </div>
+  );
+});
